@@ -1,0 +1,188 @@
+php artisan serve - run file
+php artisan migrate - check table whether exist, if not the table are added (based on migration files).
+php artisan install:api - getting api.php
+
+php artisan list - check command available
+php artisan migrate --help - check what does the command do
+php artisan list make - filter command
+php artisan make: - autocomplete command
+
+php artisan make:migration create_listings_table - create new migration file
+
+DatabaseSeeder -> create example data
+Run Seeder -> php artisan db:seed
+
+php artisan make:model Listing - create a basic model
+- to create an eloquent model, make sure the model is stored in database (automatically get the relationship)
+Where "post" Model will have "posts" table -> specify primary key and table name if they aren't similar to each other (model name & table name) 
+Ex: Example used will be "Listing" Model have "listings" table.
+
+php artisan migrate:refresh --seed - refresh the database seeds / example data * Reset Whole Thing (Remove All Data)
+
+blade section: 
+1. @yield('item') -  a placeholder in a parent layout where content from child views will be injected.
+2. @section('item') & @endsection
+3. @extends('item') - specifies that a child view should inherit from a specified parent layout.
+4. @include('item') - use to include the UIs / Themes for the System
+5a. @props(['item']) - expect a prop -> passed from parent view (in this case the prop is 'item')
+5b. <x-item :item="$item"/> - resuse a components and passing required variable
+Note: <x-'propfile name' :var_required_by_props="input_relevant_props"/>
+
+6. <x-item> </x-item>
+Note: Ensure {{$slot}} is added (components reuse)
+To overwrite the class, include {{$attributes -> merge(['class' => 'properties for tailwind'])}}
+
+Eloquent Model Commands:
+
+// CRUD Operations:
+create()
+all()
+find()
+where()
+update()
+delete()
+destroy()
+
+// Mass Assignment:
+$fillable
+$guarded
+
+// Timestamps:
+created_at
+updated_at
+
+// Relationships:
+hasMany()
+belongsTo()
+belongsToMany()
+hasOne()
+morphMany()
+
+// Query Scopes:
+Custom query scope methods
+
+// Soft Deletes:
+SoftDeletes trait
+
+blade file - 
+1. Create Views
+2. Display Data
+3. Use Blade Syntax
+4. Create Layouts
+5. Components Reuse
+6. Display and Escape Data
+7. Form & URL helper
+
+Not blade file -
+1. API - only Application
+2. Single Page Application
+3. Use Different Template Engine
+
+
+Note: Migration Section (Database Folder) Contains the SQL to Create the Database
+
+Creation of Factories:
+php artisan make:factory ListingFactory 
+Note: Factories Define How the Seeding will Works (mass generating dummy data)
+
+Creation of Controllers:
+php artisan make:controller ListingController
+app > http > controllers
+
+Common Resource Routes:
+    index - show all listings
+    show - show single listing
+    create - show form to create new listing
+    store - store new listing
+    edit - show form to edit listing
+    update - update listing
+    destroy - delete listing
+
+@csrf (add under form to prevent attack)
+
+php artisan vendor:publish (publish files from vendor packages to your application)
+
+
+*** remember to run this command before showing the images in the pages
+php artisan storage:link
+
+link storage/app/public directory to the public/storage directory. 
+This allows files that are stored in the storage/app/public directory to be accessible from the web through the public/storage URL.
+
+To Edit a Form / Record
+    Form Method = POST 
+    But Under the Method, Include the @method('PUT')
+    Other than that:
+    use Route::put in web.php
+
+To Delete
+    Form Method = POST 
+    But Under the Method, Include the @method('DELETE')
+    Other than that:
+    use Route::delete in web.php
+
+return back()->with('message','');
+
+# back() -> Head to Previous Page
+
+Grouping Mechanism:
+--
+Route::group(['prefix' => 'api'], function () {
+    Route::get('/users', 'UserController@index');
+    Route::get('/posts', 'PostController@index');
+    Route::post('/login', 'AuthController@login');
+    // Add more routes here
+});
+
+For double confirmation:
+example: 
+name="password" 
+
+the other field:
+name="password_confirmation"
+
+validation rules: confirmed (controller section)
+
+Authentication (authenticated user will see the @auth section)
+@auth
+@else
+@endauth
+
+Method to Access the Authenticated Users' Data
+{{auth()->user()->name}}
+
+Ensure Authenticated Before can Perform Functions
+Route::get(...)->middleware('auth');
+Route::get(...)->name('login');
+Route::get(...)->middleware('guest');
+
+Middleware -> not seen in laravel 11
+- Need use the command:
+php artisan make:middleware name
+- Register Under bootstrap app.php
+
+else
+- open Providers -> AppServiceProvider -> add relevant function under boot() [refer documentation]
+ref: https://laracasts.com/series/whats-new-in-laravel-11/episodes/2
+
+RouteServiceProvider -> not seen in laravel 11
+- use command:
+php artisan make:provider name
+- Register Under bootstrap providers.php
+
+Foreign key Setup:
+$table->foreignId('ModelName_DBAttributes')->constrained()->onDelete('cascade');
+
+- Declare relationships in model section
+1 to 1, 1 to many etc...
+
+php artisan tinker [command to show query output]
+\App\Models\Listing::first()
+\App\Models\Listing::find(anything)
+\App\Models\Listing::find(anything)->user
+
+variable in tinker:
+$user = App\Models\Listing::first()
+$user
+$user->listings
+
